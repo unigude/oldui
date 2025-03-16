@@ -1,0 +1,46 @@
+@import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css');
+
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    background-color: #1e3a8a;
+    /* Adjust the color as needed */
+    color: white;
+}
+
+header button {
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+/* Add these styles for modal animation */
+.modal-enter {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 200ms, transform 200ms;
+}
+
+.modal-exit {
+    opacity: 1;
+}
+
+.modal-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 200ms, transform 200ms;
+}
