@@ -1,55 +1,17 @@
 import React from "react";
-import CourseBanner from "../Essentials/CourseBanner";
+import CourseBanner from "./CourseBanner";
 
-const courseData = [
-    {
-        name: "All Contents",
-        videos: 0,
-        exercises: 0,
-        notes: 0,
-        to: "/Fields/Engineering-and-Technology/Courses/Full-Stack-Development/All-Contents"
-    },
-    {
-        name: "Frontend Development",
-        videos: 0,
-        exercises: 0,
-        notes: 0,
-        to: "#"
-    },
-    {
-        name: "Backend Development",
-        videos: 0,
-        exercises: 0,
-        notes: 0,
-        to: "#"
-    },
-    {
-        name: "Database Management",
-        videos: 0,
-        exercises: 0,
-        notes: 0,
-        to: "#"
-    },
-    {
-        name: "Deployment & DevOps",
-        videos: 0,
-        exercises: 0,
-        notes: 0,
-        to: "#"
-    }
-];
-
-const CourseDetail = () => {
+const CourseDetail = ({ title, description, courseData }) => {
     return (
         <div className="min-h-screen bg-gray-50 py-23 sm:py-23">
             <div className="container mx-auto px-3 sm:px-6">
                 {/* Header section */}
                 <div className="max-w-3xl mx-auto mb-8">
                     <h1 className="text-2xl sm:text-3xl font-bold text-center mb-3">
-                        Full Stack Development
+                        {title}
                     </h1>
                     <p className="text-sm sm:text-base text-gray-600 text-center">
-                        Learn to build and deploy full stack applications.         
+                        {description}
                     </p>
                 </div>
 
@@ -65,7 +27,7 @@ const CourseDetail = () => {
                                     notes={course.notes}
                                     to={course.to}
                                     className="shadow hover:shadow-md transition-shadow duration-200"
-                                    height="78px" // You can adjust the height here
+                                    height="78px"
                                 />
                             </div>
                         ))}
