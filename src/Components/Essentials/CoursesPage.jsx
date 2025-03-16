@@ -1,20 +1,7 @@
 import React from "react";
-import Banner from "../Essentials/Banner";
+import Banner from "./Banner";
 
-const coursesData = [
-    {
-        name: "Full Stack Development",
-        description: "Learn front-end and back-end technologies, including React, Node.js, Express, and databases, to build modern web applications.",
-        to: "/Fields/Engineering-and-Technology/Courses/Full-Stack-Development"
-    },
-    {
-        name: "Coming Soon",
-        description: "Stay tuned for more exciting courses coming your way!",
-        to: "#"
-    }
-];
-
-const CoursesPageEnT = () => {
+const CoursesPage = ({ coursesData }) => {
     return (
         <div className="min-h-screen bg-gray-100">
             <div className="container mx-auto px-4 sm:px-6 py-23 sm:py-23">
@@ -42,4 +29,4 @@ const CoursesPageEnT = () => {
     );
 };
 
-export default CoursesPageEnT;
+export default CoursesPage;
