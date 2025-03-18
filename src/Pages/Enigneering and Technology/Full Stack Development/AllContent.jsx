@@ -6,7 +6,7 @@ import Study from '../../../Components/Essentials/Study';
 export default function AllContent() {
     const studyData = {
         title: "All Contents",
-        tabItems: ["Videos", "PDF", "DPP"]
+        tabItems: ["Videos", "PDFs", "Projects"]
     };
 
     let title = () => {
