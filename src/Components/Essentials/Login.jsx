@@ -1,66 +1,92 @@
-import React, { useState } from "react";
-import { FaGoogle, FaTimes } from "react-icons/fa";
+import React, { useState, useEffect } from 'react';
+import LoginModal from './Login/LoginModal';
+import Register from './Login/Register';
 
-const Login = ({ onClose }) => {
-    const [isLogin, setIsLogin] = useState(true);
-    const [isOtpLogin, setIsOtpLogin] = useState(false);
-    const [emailVerified, setEmailVerified] = useState(false);
+export default function Login({ isOpen, onClose, initialView = 'login', onLoginSuccess }) {
+    const [currentView, setCurrentView] = useState(initialView);
+
+    useEffect(() => {
+        if (isOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = 'unset';
+        }
+        return () => {
+            document.body.style.overflow = 'unset';
+        };
+    }, [isOpen]);
+
+    const handleLoginSuccess = () => {
+        console.log("Login component: Login successful"); // Debug log
+        
+        // Set login state in localStorage
+        localStorage.setItem('isLoggedIn', 'true');
+        
+        // Broadcast login state change
+        const loginEvent = new CustomEvent('loginStateChange', {
+            detail: { isLoggedIn: true }
+        });
+        window.dispatchEvent(loginEvent);
+        
+        // Call parent's onLoginSuccess if provided
+        if (onLoginSuccess) {
+            onLoginSuccess();
+        }
+        
+        // Close the modal
+        handleClose();
+    };
+
+    const handleLogin = (credentials) => {
+        if (credentials.username === "ad" && credentials.password === "123") {
+            // Store username in localStorage
+            localStorage.setItem('username', credentials.username);
+            localStorage.setItem('isLoggedIn', 'true');
+            
+            // Call success handler
+            if (onLoginSuccess) {
+                onLoginSuccess();
+            }
+            
+            // Close modal
+            handleClose();
+        }
+    };
+
+    const handleSwitchToRegister = () => {
+        setCurrentView('register');
+    };
+
+    const handleSwitchToLogin = () => {
+        setCurrentView('login');
+    };
+
+    const handleClose = () => {
+        setCurrentView('login');
+        onClose();
+    };
+
+    if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/30 z-50">
-            <div className="bg-white shadow-lg rounded-lg p-4 md:p-6 w-full max-w-[90%] md:max-w-md text-center relative">
-                <button className="absolute top-2 md:top-4 right-2 md:right-4 text-gray-700 text-xl md:text-2xl" onClick={onClose}>
-                    <FaTimes />
-                </button>
-                <h1 className="text-xl md:text-2xl font-bold text-gray-800 mb-4">{isLogin ? "LogIn" : "Register"}</h1>
-
-                <button className="w-full flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 md:py-3 px-4 rounded-lg mb-3 text-sm md:text-base">
-                    <FaGoogle /> Continue with Google
-                </button>
-
-                {!isOtpLogin && (
-                    <>
-                        <input type="email" placeholder="Email" className="w-full p-2 md:p-3 border rounded mb-3 text-sm md:text-base" />
-                        <input type="password" placeholder="Password" className="w-full p-2 md:p-3 border rounded mb-3 text-sm md:text-base" disabled={!emailVerified} />
-                        {!isLogin && <input type="password" placeholder="Confirm Password" className="w-full p-2 md:p-3 border rounded mb-3 text-sm md:text-base" disabled={!emailVerified} />}
-                    </>
-                )}
-
-                {isOtpLogin && (
-                    <>
-                        <input type="tel" placeholder="Phone Number" className="w-full p-2 md:p-3 border rounded mb-3 text-sm md:text-base" />
-                        <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 md:py-3 px-4 rounded-lg mb-3 text-sm md:text-base">
-                            Send OTP
-                        </button>
-                        <input type="text" placeholder="Enter OTP" className="w-full p-2 md:p-3 border rounded mb-3 text-sm md:text-base" />
-                        {isLogin && <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 md:py-3 px-4 rounded-lg mb-3 text-sm md:text-base">Verify OTP</button>}
-                    </>
-                )}
-
-                {isLogin ? (
-                    <>
-                        <p className="text-blue-500 cursor-pointer mb-3 text-sm md:text-base" onClick={() => setIsOtpLogin(!isOtpLogin)}>
-                            {isOtpLogin ? "Login with Email/Password" : "Login with OTP"}
-                        </p>
-                        <p className="text-blue-500 cursor-pointer mb-3 text-sm md:text-base">Forgot Password?</p>
-                        <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 md:py-3 px-4 rounded-lg mb-3 text-sm md:text-base">Login</button>
-                        <p className="text-gray-700 text-sm md:text-base">Not a user? <span className="text-blue-500 cursor-pointer" onClick={() => setIsLogin(false)}>Then Register</span></p>
-                    </>
-                ) : (
-                    <>
-                        <input type="tel" placeholder="Phone Number" className="w-full p-2 md:p-3 border rounded mb-3 text-sm md:text-base" />
-                        <button className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 md:py-3 px-4 rounded-lg mb-3 text-sm md:text-base" onClick={() => setEmailVerified(true)}>
-                            Send Verification Email
-                        </button>
-                        <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-2 md:py-3 px-4 rounded-lg mb-3 text-sm md:text-base" disabled={!emailVerified}>
-                            Register
-                        </button>
-                        <p className="text-gray-700 text-sm md:text-base">Already have an account? <span className="text-blue-500 cursor-pointer" onClick={() => setIsLogin(true)}>LogIn</span></p>
-                    </>
-                )}
-            </div>
+        <div className="h-full flex flex-col">
+            {currentView === 'login' ? (
+                <>
+                    <h2 className="text-2xl font-bold text-center mb-6 text-gray-800">Login</h2>
+                    <LoginModal
+                        isOpen={true}
+                        onClose={onClose}
+                        onRegisterClick={handleSwitchToRegister}
+                        onLoginSuccess={handleLoginSuccess} // Pass our local handler
+                    />
+                </>
+            ) : (
+                <Register
+                    isOpen={true}
+                    onClose={onClose}
+                    onLoginClick={handleSwitchToLogin}
+                />
+            )}
         </div>
     );
-};
-
-export default Login;
+}

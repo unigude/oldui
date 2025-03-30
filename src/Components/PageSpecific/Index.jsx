@@ -6,7 +6,6 @@ import { FaRoad, FaProjectDiagram, FaChartLine, FaUsers, FaArrowRight, FaBook, F
 import FieldCard from "../Essentials/FieldCard";
 import Slider from "react-slick";
 import Login from "../Essentials/Login";
-import Button from "../Essentials/Button";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../../Components/css/Index.css";
@@ -89,9 +88,40 @@ export default function Index() {
     const [subtitleText, setSubtitleText] = useState('');
     const [showTitleCursor, setShowTitleCursor] = useState(true);
     const [showSubtitleCursor, setShowSubtitleCursor] = useState(false);
-
+    const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [showLoginModal, setShowLoginModal] = useState(false);
+    const username = localStorage.getItem('username');
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+            // Initialize login state from localStorage
+            const loginState = localStorage.getItem('isLoggedIn');
+            return loginState === 'true';
+        });
     const titleString = 'Welcome to UniGUIDE';
     const subtitleString = 'Your personalized roadmap to academic success';
+
+    const handleLoginSuccess = () => {
+        setIsLoggedIn(true);
+        setIsAuthModalOpen(false);
+        localStorage.setItem('isLoggedIn', 'true');
+
+        // Broadcast login event immediately
+        const loginEvent = new CustomEvent('loginStateChange', {
+            detail: { isLoggedIn: true }
+        });
+        window.dispatchEvent(loginEvent);
+    };
+     useEffect(() => {
+            // Listen for login state changes
+            const handleLoginStateChange = (event) => {
+                setIsLoggedIn(event.detail.isLoggedIn);
+            };
+    
+            window.addEventListener('loginStateChange', handleLoginStateChange);
+    
+            return () => {
+                window.removeEventListener('loginStateChange', handleLoginStateChange);
+            };
+        }, []);
 
     useEffect(() => {
         let titleIndex = 0;
@@ -161,7 +191,7 @@ export default function Index() {
                     </p>
                 </div>
                 <div className="flex flex-col items-center">
-                    <div className="flex flex-wrap justify-center gap-3 md:gap-8 mb-12">
+                    <div className="flex flex-wrap justify-center gap-4">
                         <ScrollLink
                             to="fields"
                             smooth={true}
@@ -170,12 +200,14 @@ export default function Index() {
                         >
                             Explore Fields
                         </ScrollLink>
-                        <Button
-                            className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-500 text-white font-semibold py-2 md:py-5 px-4 md:px-12 rounded-lg transition text-base md:text-2xl shadow-lg"
-                            onClick={() => setLoginOpen(true)}
-                        >
-                            LogIn
-                        </Button>
+                        {!isLoggedIn && (
+                            <button
+                                onClick={() => setIsAuthModalOpen(true)}
+                                className="bg-transparent border-2 border-white hover:bg-white hover:text-blue-500 text-white font-semibold py-2 md:py-5 px-4 md:px-12 rounded-lg transition text-base md:text-2xl shadow-lg"
+                            >
+                                Login
+                            </button>
+                        )}
                     </div>
 
                     <div className="grid grid-cols-3 gap-8 md:gap-16 mt-8">
@@ -265,10 +297,23 @@ export default function Index() {
                     </div>
                 </div>
             </div>
-            {/* Modified Login Modal */}
-            <div className="relative z-50">  {/* Add z-index wrapper */}
-                {loginOpen && <Login onClose={() => setLoginOpen(false)} />}
-            </div>
+            {/* Login Modal */}
+            {isAuthModalOpen && !isLoggedIn && (
+                <div className="fixed inset-0 z-[9999]">
+                    <div
+                        className="fixed inset-0 bg-black/30 backdrop-blur-[2px]"
+                        onClick={() => setIsAuthModalOpen(false)}
+                    />
+                    <div className="fixed inset-0 flex items-center justify-center p-4">
+                        <Login
+                            isOpen={isAuthModalOpen}
+                            onClose={() => setIsAuthModalOpen(false)}
+                            initialView="login"
+                            onLoginSuccess={handleLoginSuccess}
+                        />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
