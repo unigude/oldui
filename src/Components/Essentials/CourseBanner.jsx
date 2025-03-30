@@ -14,7 +14,7 @@ const CourseBanner = ({ name, videos, exercises, notes, to, className, height })
         <div className="relative group">
             <button
                 onClick={handleFollow}
-                className={`absolute top-2 'right-20 z-10 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isFollowed ? 'bg-blue-50 text-blue-600' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm'}`}>
+                className={`absolute top-2 right-20 z-10 px-3 py-1.5 rounded-full text-sm font-medium transition-all duration-200 flex items-center gap-2 ${isFollowed ? 'bg-blue-50 text-blue-600' : 'bg-white text-gray-600 hover:bg-gray-50 shadow-sm'}`}>
                 <FaBookmark className={isFollowed ? 'text-blue-600' : 'text-gray-400'} />
                 {isFollowed ? 'Followed' : 'Follow'}
             </button>
