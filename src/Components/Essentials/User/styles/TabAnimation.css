@@ -1,0 +1,35 @@
+@keyframes flowRight {
+    0% {
+        width: 0;
+        left: 0;
+    }
+    100% {
+        width: 95%;
+    }
+}
+
+@keyframes flowLeft {
+    0% {
+        width: 0;
+        right: 0;
+    }
+    100% {
+        width: 95%;
+    }
+}
+
+.tab-indicator {
+    position: absolute;
+    bottom: -2px;
+    height: 2px;
+    background-color: rgb(37, 99, 235);
+    transition: transform 0.3s ease-in-out;
+}
+
+.flow-right {
+    animation: flowRight 0.3s ease-in-out forwards;
+}
+
+.flow-left {
+    animation: flowLeft 0.3s ease-in-out forwards;
+}
